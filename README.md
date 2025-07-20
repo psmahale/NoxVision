@@ -4,11 +4,11 @@ Here's a **structured breakdown** of your **Smart CCTV System (NoxVision)** proj
 
 ### **1. Problem Statement**  
 **Current Challenges in Traditional CCTV Systems:**  
-- ❌ **Inefficient Monitoring:** Humans can’t monitor 24/7; miss critical events.  
-- ❌ **No Proactive Alerts:** Systems lack real-time threat detection (fire, weapons).  
-- ❌ **High Storage Waste:** Stores useless footage (no summarization).  
-- ❌ **Limited Intelligence:** Cannot analyze scenes (e.g., traffic violations, object descriptions).  
-- ❌ **Location-Specific Needs:** Schools, stores, and traffic require different AI features.  
+-  **Inefficient Monitoring:** Humans can’t monitor 24/7; miss critical events.  
+-  **No Proactive Alerts:** Systems lack real-time threat detection (fire, weapons).  
+-  **High Storage Waste:** Stores useless footage (no summarization).  
+-  **Limited Intelligence:** Cannot analyze scenes (e.g., traffic violations, object descriptions).  
+-  **Location-Specific Needs:** Schools, stores, and traffic require different AI features.  
 
 ---
 
@@ -82,7 +82,6 @@ A **Smart AI-Powered CCTV System** that:
 
 ---
 
-### **Final Pitch to Your College**  
+  
 *“NoxVision redefines surveillance by combining **multi-camera AI analytics**, **real-time alerts**, and **GPT-powered scene descriptions**—making CCTV systems **proactive**, not passive. It’s **scalable** (from shops to smart cities) and **cost-efficient** (Edge AI reduces cloud costs).”*  
 
-Would you like a **prototype development roadmap** next? 🚀
