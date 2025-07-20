@@ -1,4 +1,4 @@
-Here's a **structured breakdown** of your **Smart CCTV System (NoxVision)** project covering all requested aspects:  
+**Smart CCTV System (NoxVision)** project covering all necessary aspects:  
 
 ---
 
