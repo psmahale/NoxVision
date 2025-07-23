@@ -75,7 +75,7 @@ NoxVision addresses these gaps by integrating **Edge AI, multi-camera analytics,
 #### **6.1 Market Potential**  
 - **Target Clients:** Smart cities, industries, retail stores.  
 - **Revenue Model:**  
-  - **Subscription:** $10/camera/month.  
+  - **Subscription:** 999/camera/month.  
   - **Customization Fee:** One-time charge for specialized AI models.  
 
 #### **6.2 Advantages**  
