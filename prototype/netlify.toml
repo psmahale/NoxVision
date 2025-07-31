@@ -1,0 +1,4 @@
+[[redirects]]
+  from = "/*"
+  to = "/initialgrid.html"
+  status = 200
