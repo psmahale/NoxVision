@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoxVision - Camera Configuration</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reused styles from previous page */
+        :root {
+            --primary: #4361ee;
+            --critical: #ef233c;
+            --warning: #f4a261;
+            --info: #2a9d8f;
+            --text: #2b2d42;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        body {
+            background: white;
+            color: var(--text);
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        
+        .logo i {
+            font-size: 1.8rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.2s;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a.active:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        /* Page-specific styles */
+        .config-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            min-height: calc(100vh - 73px);
+        }
+        
+        /* Camera List Sidebar */
+        .camera-sidebar {
+            border-right: 1px solid #eee;
+            background: var(--light-bg);
+            padding: 25px 0;
+        }
+        
+        .sidebar-header {
+            padding: 0 25px 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .camera-list {
+            padding: 10px 0;
+        }
+        
+        .camera-item {
+            padding: 12px 25px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .camera-item:hover {
+            background: rgba(0,0,0,0.03);
+        }
+        
+        .camera-item.active {
+            background: white;
+            border-left: 3px solid var(--primary);
+            font-weight: 500;
+        }
+        
+        /* Configuration Panel */
+        .config-panel {
+            padding: 30px;
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .camera-preview {
+            width: 100%;
+            height: 300px;
+            background: #222;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        /* Feature Toggles */
+        .feature-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .feature-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .feature-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        
+        input:checked + .slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        /* Zone Drawing Interface */
+        .zone-config {
+            margin-top: 15px;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 15px;
+            min-height: 200px;
+        }
+        
+        .zone-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-outline {
+            background: white;
+            border: 1px solid #ddd;
+            color: var(--text);
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        /* Feature-specific controls */
+        .summary-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .option-card {
+            background: white;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .option-card:hover {
+            border-color: var(--primary);
+        }
+        
+        .option-card.selected {
+            border-color: var(--primary);
+            background: rgba(67, 97, 238, 0.05);
+        }
+        
+        .option-icon {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        /* New styles for date-time range */
+        .datetime-range {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .datetime-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .datetime-group label {
+            font-weight: 500;
+        }
+
+        .datetime-input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+
+        .summary-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .summary-length {
+            margin-top: 20px;
+        }
+
+        .summary-length label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .summary-length-options {
+            display: flex;
+            gap: 15px;
+        }
+
+        .summary-length-option {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .summary-length-option:hover {
+            border-color: var(--primary);
+        }
+
+        .summary-length-option.selected {
+            background: rgba(67, 97, 238, 0.1);
+            border-color: var(--primary);
+            color: var(--primary);
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar (Consistent with first page) -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-eye"></i>
+            <span>NoxVision</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="initialgrid.html">Dashboard</a>
+            <a href="#" class="active">Configure</a>
+            <a href="alert.html">Alerts</a>
+            <a href="report.html">Reports</a>
+            <a href="setting.html">Settings</a>
+        </div>
+        
+        <div class="user-menu">
+            <div class="user-avatar">AD</div>
+        </div>
+    </nav>
+    
+    <!-- Configuration Interface -->
+    <div class="config-container">
+        <!-- Camera List Sidebar -->
+        <div class="camera-sidebar">
+            <div class="sidebar-header">
+                <h3>Your Cameras</h3>
+            </div>
+            <div class="camera-list">
+                <div class="camera-item active">
+                    <i class="fas fa-video"></i>
+                    <span>Main Entrance</span>
+                </div>
+                <div class="camera-item">
+                    <i class="fas fa-video"></i>
+                    <span>Warehouse Aisle 3</span>
+                </div>
+                <div class="camera-item">
+                    <i class="fas fa-video"></i>
+                    <span>Parking Lot</span>
+                </div>
+                <div class="camera-item">
+                    <i class="fas fa-video"></i>
+                    <span>Server Room</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Configuration Panel -->
+        <div class="config-panel">
+            <div class="panel-header">
+                <h2>Main Entrance Configuration</h2>
+                <button class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+            
+            <!-- Camera Preview -->
+            <div class="camera-preview">
+                <i class="fas fa-video fa-3x"></i>
+                <div style="position: absolute; bottom: 15px; left: 15px; color: #fff; background: rgba(0,0,0,0.5); padding: 5px 10px; border-radius: 4px;">
+                    Live: Main Entrance
+                </div>
+            </div>
+            
+            <!-- Enhanced Video Summarization Section -->
+            <div class="feature-section">
+                <div class="feature-header">
+                    <div class="feature-title">
+                        <i class="fas fa-film" style="margin-right: 8px;"></i>
+                        Video Summarization
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <p class="text-muted" style="margin-bottom: 15px;">
+                    Save only clips with detected activity to reduce storage usage.
+                </p>
+                
+                <div class="summary-options">
+                    <div class="option-card selected">
+                        <div class="option-icon">
+                            <i class="fas fa-walking"></i>
+                        </div>
+                        <div>Human Activity</div>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-icon">
+                            <i class="fas fa-car"></i>
+                        </div>
+                        <div>Vehicle Motion</div>
+                    </div>
+                    <div class="option-card">
+                        <div class="option-icon">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div>Anomalies</div>
+                    </div>
+                </div>
+                
+                <!-- New Date-Time Range Selector -->
+                <div class="datetime-range">
+                    <div class="datetime-group">
+                        <label>From</label>
+                        <input type="date" class="datetime-input" id="summary-date-start">
+                        <input type="time" class="datetime-input" id="summary-time-start" value="00:00">
+                    </div>
+                    <div class="datetime-group">
+                        <label>To</label>
+                        <input type="date" class="datetime-input" id="summary-date-end">
+                        <input type="time" class="datetime-input" id="summary-time-end" value="23:59">
+                    </div>
+                </div>
+                
+                <!-- Enhanced Summary Length Options -->
+                <div class="summary-length">
+                    <label>Summary Length</label>
+                    <div class="summary-length-options">
+                        <div class="summary-length-option selected">24 Hours</div>
+                        <div class="summary-length-option">12 Hours</div>
+                        <div class="summary-length-option">Custom</div>
+                    </div>
+                </div>
+                
+                <!-- Generate Summary Button -->
+                <div class="summary-actions">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-history"></i> Use Default (Last 24h)
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-play-circle"></i> Generate Summary
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Feature 2: Perimeter Protection -->
+            <div class="feature-section">
+                <div class="feature-header">
+                    <div class="feature-title">
+                        <i class="fas fa-vector-square" style="margin-right: 8px;"></i>
+                        Perimeter Protection
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <p class="text-muted" style="margin-bottom: 15px;">
+                    Define restricted zones and get alerts when breached.
+                </p>
+                
+                <div class="zone-config">
+                    <div style="text-align: center; padding: 40px 0; color: #666;">
+                        <i class="fas fa-draw-polygon fa-3x" style="margin-bottom: 15px;"></i>
+                        <p>Click "Draw Zone" to define protected area</p>
+                    </div>
+                </div>
+                
+                <div class="zone-actions">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-draw-polygon"></i> Draw Zone
+                    </button>
+                    <button class="btn btn-outline">
+                        <i class="fas fa-trash-alt"></i> Clear
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Feature 3: Threat Detection -->
+            <div class="feature-section">
+                <div class="feature-header">
+                    <div class="feature-title">
+                        <i class="fas fa-shield-alt" style="margin-right: 8px;"></i>
+                        Threat Detection
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div style="margin-top: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">Detection Sensitivity</label>
+                    <input type="range" min="1" max="10" value="7" style="width: 100%;">
+                    <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+                        <span>Low</span>
+                        <span>Medium</span>
+                        <span>High</span>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <label style="display: block; margin-bottom: 10px; font-weight: 500;">Alert Types</label>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                        <div>
+                            <input type="checkbox" id="weapons" checked>
+                            <label for="weapons">Weapons</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="fire" checked>
+                            <label for="fire">Fire/Smoke</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="crowd">
+                            <label for="crowd">Crowd Gathering</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="loitering">
+                            <label for="loitering">Loitering</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set default dates for the summary range (today and yesterday)
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            // Format dates as YYYY-MM-DD
+            const formatDate = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+            
+            document.getElementById('summary-date-start').value = formatDate(yesterday);
+            document.getElementById('summary-date-end').value = formatDate(today);
+            
+            // Handle summary length selection
+            const lengthOptions = document.querySelectorAll('.summary-length-option');
+            lengthOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    lengthOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

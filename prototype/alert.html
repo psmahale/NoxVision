@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoxVision - Alert Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Consistent with previous pages */
+        :root {
+            --primary: #4361ee;
+            --critical: #ef233c;
+            --warning: #f4a261;
+            --info: #2a9d8f;
+            --text: #2b2d42;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        body {
+            background: white;
+            color: var(--text);
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+        .logo i {
+            font-size: 1.8rem;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: color 0.2s;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+        
+        .nav-links a.active:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+        
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        
+        /* Page-specific styles */
+        .alert-detail-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            min-height: calc(100vh - 73px);
+        }
+        
+        /* Alert List Panel */
+        .alert-sidebar {
+            border-right: 1px solid #eee;
+            background: var(--light-bg);
+            overflow-y: auto;
+            height: calc(100vh - 73px);
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .filter-controls {
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .filter-group {
+            margin-bottom: 15px;
+        }
+        
+        .filter-group h4 {
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .filter-chip {
+            padding: 5px 10px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .filter-chip:hover, .filter-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .alert-list {
+            padding: 10px 0;
+        }
+        
+        .alert-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .alert-item:hover {
+            background: rgba(0,0,0,0.03);
+        }
+        
+        .alert-item.active {
+            background: white;
+            border-left-color: var(--primary);
+        }
+        
+        .alert-item.critical {
+            border-left-color: var(--critical);
+        }
+        
+        .alert-item.warning {
+            border-left-color: var(--warning);
+        }
+        
+        .alert-item-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .alert-item-title {
+            font-weight: 500;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .alert-item-desc {
+            font-size: 0.85rem;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Improved Alert Detail Panel */
+        .alert-detail {
+            padding: 30px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        .alert-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        
+        .alert-priority {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .priority-critical {
+            background: rgba(239, 35, 60, 0.1);
+            color: var(--critical);
+        }
+        
+        .priority-warning {
+            background: rgba(244, 162, 97, 0.1);
+            color: var(--warning);
+        }
+        
+        .alert-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-outline {
+            background: white;
+            border: 1px solid #ddd;
+            color: var(--text);
+        }
+        
+        .btn-danger {
+            background: var(--critical);
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        .alert-media {
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .alert-image {
+            width: 100%;
+            height: 350px;
+            background: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            position: relative;
+        }
+        
+        .alert-timestamp {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .alert-info {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .info-label {
+            font-weight: 500;
+            color: #666;
+        }
+        
+        .alert-map {
+            height: 200px;
+            background: #eee;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        
+        .evidence-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* New responsive grid styles */
+        .alert-content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .alert-response-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .alert-warning-card {
+            background: rgba(239, 35, 60, 0.05);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid var(--critical);
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Consistent Navigation -->
+    <nav class="navbar">
+        <div class="logo">
+            <i class="fas fa-eye"></i>
+            <span>NoxVision</span>
+        </div>
+        
+        <div class="nav-links">
+            <a href="initialgrid.html">Dashboard</a>
+            <a href="configuration.html">Configure</a>
+            <a href="#" class="active">Alerts</a>
+            <a href="report.html">Reports</a>
+            <a href="setting.html">Settings</a>
+        </div>
+        
+        <div class="user-menu">
+            <div class="user-avatar">AD</div>
+        </div>
+    </nav>
+    
+    <!-- Alert Management Interface -->
+    <div class="alert-detail-container">
+        <!-- Alert List Sidebar -->
+        <div class="alert-sidebar">
+            <div class="sidebar-header">
+                <h3>Alerts</h3>
+                <span style="font-size: 0.9rem; color: #666;">24 Today</span>
+            </div>
+            
+            <div class="filter-controls">
+                <div class="filter-group">
+                    <h4>Priority</h4>
+                    <div class="filter-options">
+                        <div class="filter-chip active">All</div>
+                        <div class="filter-chip">Critical</div>
+                        <div class="filter-chip">Warning</div>
+                        <div class="filter-chip">Info</div>
+                    </div>
+                </div>
+                
+                <div class="filter-group">
+                    <h4>Alert Type</h4>
+                    <div class="filter-options">
+                        <div class="filter-chip active">All</div>
+                        <div class="filter-chip">Fire</div>
+                        <div class="filter-chip">Weapon</div>
+                        <div class="filter-chip">Intrusion</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert-list">
+                <!-- Critical Alert -->
+                <div class="alert-item active critical">
+                    <div class="alert-item-meta">
+                        <span>10:23 AM</span>
+                        <span>Critical</span>
+                    </div>
+                    <div class="alert-item-title">
+                        <i class="fas fa-fire"></i>
+                        Fire Detected
+                    </div>
+                    <div class="alert-item-desc">
+                        High temperature detected in Warehouse Aisle 3
+                    </div>
+                </div>
+                
+                <!-- Warning Alert -->
+                <div class="alert-item warning">
+                    <div class="alert-item-meta">
+                        <span>10:15 AM</span>
+                        <span>Warning</span>
+                    </div>
+                    <div class="alert-item-title">
+                        <i class="fas fa-user-secret"></i>
+                        Unauthorized Access
+                    </div>
+                    <div class="alert-item-desc">
+                        Person detected in restricted Server Room area
+                    </div>
+                </div>
+                
+                <!-- Info Alert -->
+                <div class="alert-item">
+                    <div class="alert-item-meta">
+                        <span>9:55 AM</span>
+                        <span>Info</span>
+                    </div>
+                    <div class="alert-item-title">
+                        <i class="fas fa-car"></i>
+                        Vehicle Detected
+                    </div>
+                    <div class="alert-item-desc">
+                        Truck arrived at Loading Bay 2
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Improved Alert Detail View -->
+        <div class="alert-detail">
+            <div class="alert-header">
+                <div>
+                    <h2>Fire Detected</h2>
+                    <div class="alert-priority priority-critical">Critical Priority</div>
+                </div>
+                <div class="alert-actions">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-check"></i> Resolve
+                    </button>
+                </div>
+            </div>
+            
+            <div class="alert-content-grid">
+                <div class="alert-media">
+                    <div class="alert-image">
+                        <i class="fas fa-fire fa-4x"></i>
+                        <div class="alert-timestamp">
+                            <i class="far fa-clock"></i> 10:23:45 AM - Jul 23, 2025
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="alert-info">
+                    <h3 style="margin-bottom: 15px;">Alert Details</h3>
+                    <div class="info-grid">
+                        <div class="info-label">Location:</div>
+                        <div>Warehouse - Aisle 3, Sector B</div>
+                        
+                        <div class="info-label">Camera:</div>
+                        <div>Warehouse Cam 3 (ID: WH3-45)</div>
+                        
+                        <div class="info-label">Confidence:</div>
+                        <div>92% (High)</div>
+                        
+                        <div class="info-label">Triggered By:</div>
+                        <div>Thermal Anomaly Detection</div>
+                        
+                        <div class="info-label">Duration:</div>
+                        <div>45 seconds (ongoing)</div>
+                    </div>
+                    
+                    <div class="alert-map">
+                        <i class="fas fa-map-marked-alt fa-3x"></i>
+                        <span style="margin-left: 10px;">View on Facility Map</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert-response-grid">
+                <div class="alert-info">
+                    <h3 style="margin-bottom: 15px;">Response Protocol</h3>
+                    <p style="margin-bottom: 15px; line-height: 1.6;">
+                        Critical fire alert detected. Emergency protocols activated:
+                    </p>
+                    <ul style="margin-left: 20px; margin-bottom: 15px; line-height: 1.8;">
+                        <li>Fire suppression system primed</li>
+                        <li>Local alarms triggered</li>
+                        <li>Security team notified (Responding)</li>
+                        <li>Fire department auto-alerted</li>
+                    </ul>
+                </div>
+                
+                <div class="alert-info" style="display: flex; flex-direction: column;">
+                    <div class="alert-warning-card">
+                        <i class="fas fa-exclamation-triangle" style="color: var(--critical); margin-right: 8px;"></i>
+                        Evacuation recommended within 200m radius
+                    </div>
+                    <div class="evidence-actions" style="margin-top: auto;">
+                        <button class="btn btn-outline">
+                            <i class="fas fa-download"></i> Download Evidence
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-file-alt"></i> Generate Report
+                        </button>
+                        <button class="btn btn-danger">
+                            <i class="fas fa-bell"></i> Escalate Alert
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
