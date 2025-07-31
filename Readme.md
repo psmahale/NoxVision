@@ -1,7 +1,5 @@
 # NoxVision - Intelligent Surveillance System
 
-![NoxVision Logo](https://via.placeholder.com/150x50?text=NoxVision)
-
 NoxVision is an AI-powered surveillance system that provides real-time threat detection, alert management, and comprehensive reporting for security operations.
 
 ## Features
