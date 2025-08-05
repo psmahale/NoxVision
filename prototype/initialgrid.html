@@ -150,13 +150,13 @@
         }
         
         .status-indicator {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
         }
         
         .status-active {
-            background: var(--info);
+            background: #2a9d8f;
         }
         
         .status-inactive {
@@ -164,80 +164,83 @@
         }
         
         .camera-feed {
-            width: 100%;
             height: 200px;
             background: #222;
-            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
+            position: relative;
         }
         
         .camera-actions {
-            padding: 10px 15px;
+            padding: 15px;
             display: flex;
-            justify-content: space-between;
-            background: white;
+            gap: 10px;
+            background: var(--light-bg);
         }
         
         .action-btn {
-            background: none;
+            padding: 8px 12px;
             border: none;
-            color: var(--text);
-            cursor: pointer;
-            padding: 5px 10px;
+            background: white;
             border-radius: 6px;
-            transition: background 0.2s;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text);
         }
         
         .action-btn:hover {
-            background: rgba(0,0,0,0.05);
+            background: var(--primary);
+            color: white;
         }
         
         /* ===== NOTIFICATION PANEL ===== */
         .notification-panel {
-            border-left: 1px solid #eee;
-            padding: 25px;
             background: var(--light-bg);
+            border-left: 1px solid #eee;
             overflow-y: auto;
-            max-height: calc(100vh - 73px);
         }
         
         .panel-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            background: white;
         }
         
         .panel-title {
-            font-size: 1.2rem;
             font-weight: 600;
+            font-size: 1.1rem;
         }
         
         .notification-count {
             background: var(--primary);
             color: white;
-            padding: 2px 8px;
-            border-radius: 20px;
+            padding: 4px 8px;
+            border-radius: 12px;
             font-size: 0.8rem;
+            font-weight: 500;
         }
         
         .notification-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
+            padding: 15px;
         }
         
         .notification-card {
             background: white;
+            border-radius: 8px;
             padding: 15px;
-            border-radius: 10px;
+            margin-bottom: 15px;
             box-shadow: var(--card-shadow);
-            cursor: pointer;
+            border-left: 4px solid transparent;
             transition: transform 0.2s;
-            border-left: 4px solid var(--info);
+        }
+        
+        .notification-card:hover {
+            transform: translateX(5px);
         }
         
         .notification-card.critical {
@@ -248,13 +251,9 @@
             border-left-color: var(--warning);
         }
         
-        .notification-card:hover {
-            transform: translateX(5px);
-        }
-        
         .notification-title {
             font-weight: 600;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -264,10 +263,19 @@
             font-size: 1.1rem;
         }
         
+        .notification-card.critical .notification-icon {
+            color: var(--critical);
+        }
+        
+        .notification-card.warning .notification-icon {
+            color: var(--warning);
+        }
+        
         .notification-desc {
-            font-size: 0.9rem;
             color: #666;
+            font-size: 0.9rem;
             margin-bottom: 8px;
+            line-height: 1.4;
         }
         
         .notification-time {
@@ -277,28 +285,291 @@
             align-items: center;
             gap: 5px;
         }
-        
-        /* ===== UTILITY CLASSES ===== */
-        .flex-between {
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 1024px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+            
+            .nav-links {
+                gap: 20px;
+            }
+            
+            .container {
+                grid-template-columns: 65% 35%;
+            }
+            
+            .camera-grid {
+                padding: 20px;
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* Mobile Navigation */
+            .navbar {
+                padding: 12px 15px;
+                flex-wrap: wrap;
+            }
+            
+            .logo {
+                font-size: 1.3rem;
+            }
+            
+            .logo i {
+                font-size: 1.5rem;
+            }
+            
+            .nav-links {
+                display: none;
+                width: 100%;
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px 0;
+                border-top: 1px solid #eee;
+                margin-top: 15px;
+            }
+            
+            .nav-links.show {
+                display: flex;
+            }
+            
+            .nav-links a {
+                padding: 10px 0;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            
+            .nav-links a:last-child {
+                border-bottom: none;
+            }
+            
+            .nav-links a.active:after {
+                display: none;
+            }
+            
+            .nav-links a.active {
+                color: var(--primary);
+                font-weight: 600;
+            }
+            
+            /* Mobile Menu Toggle */
+            .mobile-menu-toggle {
+                display: block;
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                color: var(--text);
+                cursor: pointer;
+            }
+            
+            /* Mobile Layout */
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr auto;
+            }
+            
+            .camera-grid {
+                padding: 15px;
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .camera-card {
+                max-width: 100%;
+            }
+            
+            .camera-feed {
+                height: 180px;
+            }
+            
+            .camera-actions {
+                padding: 12px;
+            }
+            
+            .action-btn {
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+            
+            .notification-panel {
+                border-left: none;
+                border-top: 1px solid #eee;
+                max-height: 300px;
+            }
+            
+            .panel-header {
+                padding: 15px;
+            }
+            
+            .notification-list {
+                padding: 10px 15px;
+            }
+            
+            .notification-card {
+                padding: 12px;
+                margin-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar {
+                padding: 10px 12px;
+            }
+            
+            .logo {
+                font-size: 1.2rem;
+            }
+            
+            .camera-grid {
+                padding: 10px;
+            }
+            
+            .camera-feed {
+                height: 150px;
+            }
+            
+            .camera-header {
+                padding: 12px;
+            }
+            
+            .camera-actions {
+                padding: 10px;
+            }
+            
+            .action-btn {
+                padding: 8px 10px;
+                font-size: 0.85rem;
+            }
+            
+            .panel-header {
+                padding: 12px;
+            }
+            
+            .notification-card {
+                padding: 10px;
+            }
+        }
+
+        /* Hide mobile menu toggle on desktop */
+        .mobile-menu-toggle {
+            display: none;
+        }
+
+        /* Mobile Navigation Sidebar */
+        .mobile-nav-sidebar {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .mobile-nav-sidebar.show {
+            left: 0;
+        }
+
+        .mobile-nav-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
-        
-        .text-muted {
-            color: #666;
+
+        .mobile-nav-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .mobile-nav-links {
+            padding: 20px 0;
+        }
+
+        .mobile-nav-item {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: background 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .mobile-nav-item:hover,
+        .mobile-nav-item.active {
+            background: rgba(67, 97, 238, 0.1);
+            border-left-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .mobile-nav-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .mobile-nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .mobile-nav-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-nav-sidebar {
+                display: block;
+            }
+        }
+
+        /* Mobile Button and Form Optimization */
+        @media (max-width: 768px) {
+            .action-btn {
+                min-height: 44px;
+                padding: 12px 16px;
+                font-size: 16px;
+            }
+
+            .camera-actions {
+                gap: 8px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
+    <!-- Navigation -->
     <nav class="navbar">
         <div class="logo">
             <i class="fas fa-eye"></i>
             <span>NoxVision</span>
         </div>
         
-        <div class="nav-links">
+        <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <div class="nav-links" id="navLinks">
             <a href="#" class="active">Dashboard</a>
             <a href="configuration.html">Configure</a>
             <a href="alert.html">Alerts</a>
@@ -311,9 +582,9 @@
         </div>
     </nav>
     
-    <!-- Main Content -->
+    <!-- Main Container -->
     <div class="container">
-        <!-- Camera Grid Section -->
+        <!-- Camera Grid -->
         <div class="camera-grid">
             <!-- Camera 1 -->
             <div class="camera-card">
@@ -337,7 +608,7 @@
             <!-- Camera 2 -->
             <div class="camera-card">
                 <div class="camera-header">
-                    <div class="camera-title">Warehouse Aisle 3</div>
+                    <div class="camera-title">Warehouse</div>
                     <div class="camera-status">
                         <div class="status-indicator status-active"></div>
                         <span>Active</span>
@@ -448,5 +719,68 @@
             </div>
         </div>
     </div>
+
+    <!-- Mobile Navigation Sidebar -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+    <div class="mobile-nav-sidebar" id="mobileNavSidebar">
+        <div class="mobile-nav-header">
+            <div class="logo">
+                <i class="fas fa-eye"></i>
+                <span>NoxVision</span>
+            </div>
+            <button class="mobile-nav-close" onclick="closeMobileNav()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="mobile-nav-links">
+            <a href="#" class="mobile-nav-item active">
+                <i class="fas fa-tachometer-alt"></i>
+                Dashboard
+            </a>
+            <a href="configuration.html" class="mobile-nav-item">
+                <i class="fas fa-cog"></i>
+                Configure
+            </a>
+            <a href="alert.html" class="mobile-nav-item">
+                <i class="fas fa-bell"></i>
+                Alerts
+            </a>
+            <a href="report.html" class="mobile-nav-item">
+                <i class="fas fa-chart-bar"></i>
+                Reports
+            </a>
+            <a href="setting.html" class="mobile-nav-item">
+                <i class="fas fa-sliders-h"></i>
+                Settings
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('navLinks');
+            navLinks.classList.toggle('show');
+        }
+
+        function openMobileNav() {
+            const sidebar = document.getElementById('mobileNavSidebar');
+            const overlay = document.getElementById('mobileNavOverlay');
+            sidebar.classList.add('show');
+            overlay.classList.add('show');
+        }
+
+        function closeMobileNav() {
+            const sidebar = document.getElementById('mobileNavSidebar');
+            const overlay = document.getElementById('mobileNavOverlay');
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+        }
+
+        // Close mobile nav when clicking overlay
+        document.getElementById('mobileNavOverlay').addEventListener('click', closeMobileNav);
+
+        // Update hamburger menu to open mobile nav instead
+        document.querySelector('.mobile-menu-toggle').onclick = openMobileNav;
+    </script>
 </body>
 </html>
