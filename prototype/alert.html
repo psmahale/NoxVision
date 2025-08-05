@@ -584,117 +584,124 @@
             display: none;
         }
 
-        /* Mobile Navigation Sidebar */
-        .mobile-nav-sidebar {
-            position: fixed;
-            top: 0;
-            left: -280px;
-            width: 280px;
-            height: 100vh;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            transition: left 0.3s ease;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-            display: none;
-        }
+        /* Mobile Navigation Sidebar - Improved */
+.mobile-nav-sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 280px;
+    height: 100vh;
+    background: white;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    overflow-y: auto;
+}
 
-        .mobile-nav-sidebar.show {
-            left: 0;
-        }
+.mobile-nav-sidebar.show {
+    left: 0;
+}
 
-        .mobile-nav-header {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.mobile-nav-header {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--primary);
+    color: white;
+}
 
-        .mobile-nav-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: var(--text);
-            cursor: pointer;
-        }
+.mobile-nav-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: white;
+    cursor: pointer;
+}
 
-        .mobile-nav-links {
-            padding: 20px 0;
-        }
+.mobile-nav-links {
+    padding: 10px 0;
+}
 
-        .mobile-nav-item {
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            text-decoration: none;
-            color: var(--text);
-            font-weight: 500;
-            transition: background 0.2s;
-            border-left: 3px solid transparent;
-        }
+.mobile-nav-item {
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    color: var(--text);
+    font-weight: 500;
+    transition: all 0.2s;
+    border-left: 4px solid transparent;
+}
 
-        .mobile-nav-item:hover,
-        .mobile-nav-item.active {
-            background: rgba(67, 97, 238, 0.1);
-            border-left-color: var(--primary);
-            color: var(--primary);
-        }
+.mobile-nav-item:hover,
+.mobile-nav-item.active {
+    background: rgba(67, 97, 238, 0.1);
+    border-left-color: var(--primary);
+    color: var(--primary);
+}
 
-        .mobile-nav-item i {
-            width: 20px;
-            text-align: center;
-        }
+.mobile-nav-item i {
+    width: 24px;
+    text-align: center;
+    font-size: 1.1rem;
+}
 
-        .mobile-nav-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
+.mobile-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
 
-        .mobile-nav-overlay.show {
-            opacity: 1;
-            visibility: visible;
-        }
+.mobile-nav-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
 
-        @media (max-width: 768px) {
-            .mobile-nav-sidebar {
-                display: block;
-            }
-        }
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text);
+    cursor: pointer;
+    padding: 5px;
+}
 
-        /* Mobile Button and Form Optimization */
-        @media (max-width: 768px) {
-            .btn {
-                min-height: 44px;
-                padding: 12px 16px;
-                font-size: 16px;
-            }
-
-            .evidence-actions .btn {
-                min-height: 50px;
-                padding: 15px 20px;
-            }
-
-            input[type="checkbox"] {
-                width: 20px;
-                height: 20px;
-            }
-
-            select {
-                min-height: 44px;
-                padding: 12px 16px;
-                font-size: 16px;
-            }
-        }
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    .nav-links {
+        display: none;
+    }
+    
+    .mobile-nav-sidebar {
+        display: block;
+    }
+    
+    /* Improve touch targets */
+    .btn, .action-btn, .filter-chip {
+        min-height: 44px;
+        padding: 12px 16px;
+    }
+    
+    input, select, textarea {
+        min-height: 44px;
+    }
+}
     </style>
 </head>
 <body>
@@ -889,67 +896,70 @@
         </div>
     </div>
 
-    <!-- Mobile Navigation Sidebar -->
-    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
-    <div class="mobile-nav-sidebar" id="mobileNavSidebar">
-        <div class="mobile-nav-header">
-            <div class="logo">
-                <i class="fas fa-eye"></i>
-                <span>NoxVision</span>
-            </div>
-            <button class="mobile-nav-close" onclick="closeMobileNav()">
-                <i class="fas fa-times"></i>
-            </button>
+     <!-- Mobile Navigation Sidebar -->
+<div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+<div class="mobile-nav-sidebar" id="mobileNavSidebar">
+    <div class="mobile-nav-header">
+        <div class="logo" style="color: white;">
+            <i class="fas fa-eye"></i>
+            <span>NoxVision</span>
         </div>
-        <div class="mobile-nav-links">
-            <a href="initialgrid.html" class="mobile-nav-item">
-                <i class="fas fa-tachometer-alt"></i>
-                Dashboard
-            </a>
-            <a href="configuration.html" class="mobile-nav-item">
-                <i class="fas fa-cog"></i>
-                Configure
-            </a>
-            <a href="#" class="mobile-nav-item active">
-                <i class="fas fa-bell"></i>
-                Alerts
-            </a>
-            <a href="report.html" class="mobile-nav-item">
-                <i class="fas fa-chart-bar"></i>
-                Reports
-            </a>
-            <a href="setting.html" class="mobile-nav-item">
-                <i class="fas fa-sliders-h"></i>
-                Settings
-            </a>
-        </div>
+        <button class="mobile-nav-close" onclick="closeMobileNav()">
+            <i class="fas fa-times"></i>
+        </button>
     </div>
+    <div class="mobile-nav-links">
+        <a href="initialgrid.html" class="mobile-nav-item">
+            <i class="fas fa-tachometer-alt"></i>
+            Dashboard
+        </a>
+        <a href="configuration.html" class="mobile-nav-item">
+            <i class="fas fa-cog"></i>
+            Configure
+        </a>
+        <a href="alert.html" class="mobile-nav-item">
+            <i class="fas fa-bell"></i>
+            Alerts
+        </a>
+        <a href="report.html" class="mobile-nav-item">
+            <i class="fas fa-chart-bar"></i>
+            Reports
+        </a>
+        <a href="setting.html" class="mobile-nav-item">
+            <i class="fas fa-sliders-h"></i>
+            Settings
+        </a>
+    </div>
+</div>
 
-    <script>
-        function toggleMobileMenu() {
-            const navLinks = document.getElementById('navLinks');
-            navLinks.classList.toggle('show');
-        }
+<script>
+     function toggleMobileMenu() {
+        const navLinks = document.getElementById('navLinks');
+        navLinks.classList.toggle('show');
+    }
 
-        function openMobileNav() {
-            const sidebar = document.getElementById('mobileNavSidebar');
-            const overlay = document.getElementById('mobileNavOverlay');
-            sidebar.classList.add('show');
-            overlay.classList.add('show');
-        }
+    function openMobileNav() {
+        document.getElementById('mobileNavSidebar').classList.add('show');
+        document.getElementById('mobileNavOverlay').classList.add('show');
+        document.body.style.overflow = 'hidden'; // Prevent scrolling when nav is open
+    }
 
-        function closeMobileNav() {
-            const sidebar = document.getElementById('mobileNavSidebar');
-            const overlay = document.getElementById('mobileNavOverlay');
-            sidebar.classList.remove('show');
-            overlay.classList.remove('show');
-        }
+    function closeMobileNav() {
+        document.getElementById('mobileNavSidebar').classList.remove('show');
+        document.getElementById('mobileNavOverlay').classList.remove('show');
+        document.body.style.overflow = ''; // Re-enable scrolling
+    }
 
-        // Close mobile nav when clicking overlay
-        document.getElementById('mobileNavOverlay').addEventListener('click', closeMobileNav);
+    // Close mobile nav when clicking overlay
+    document.getElementById('mobileNavOverlay').addEventListener('click', closeMobileNav);
 
-        // Update hamburger menu to open mobile nav instead
-        document.querySelector('.mobile-menu-toggle').onclick = openMobileNav;
-    </script>
+    // Update hamburger menu to open mobile nav
+    document.querySelector('.mobile-menu-toggle').onclick = openMobileNav;
+
+    // Close nav when clicking a link (for single page apps)
+    document.querySelectorAll('.mobile-nav-item').forEach(item => {
+        item.addEventListener('click', closeMobileNav);
+    });
+</script>
 </body>
 </html>
